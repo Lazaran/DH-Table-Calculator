@@ -34,6 +34,10 @@ public:
         return JointIndex;
     };
 
+    bool getisRevolute() {
+        return isRevolute;
+    };
+
     vector<int> getZaxis() {
         return ZaxisOrientation;
     };
