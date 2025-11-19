@@ -85,22 +85,22 @@ int main() {
 
         // Start inputting joint parameters
         cout << "\nLet's begin inputting the joint parameters.";
-        cout << "\nInputting Base Joint Parameters: \n";
+        // cout << "\nInputting Base Joint Parameters: \n";
 
-        // Input base joint type
-        while (true) {
-            // Get base joint type
-            bool baseJointType = modifyJointType(0);
-            // Get base joint Z orientation
-            vector<int> baseJointOrientation = modifyJointOrientation(0);
-            // Add base joint to joint vector
-            Joints.push_back(Joint(0, baseJointType, baseJointOrientation, vector<int>{0,0,0}));
-            cout << "\nBase Joint set as Joint " << Joints.at(0).getIndex() << ", and is " << boolToStr_JointType(Joints.at(0).getisRevolute()) << " with default Z Orientation " << stringFromIntVector(Joints.at(0).getZaxis()) << " and Position " << stringFromIntVector(Joints.at(0).getZaxis()) << ".\n";
-            break;
-        };
+        // // Input base joint type
+        // while (true) {
+        //     // Get base joint type
+        //     bool baseJointType = modifyJointType(0);
+        //     // Get base joint Z orientation
+        //     vector<int> baseJointOrientation = modifyJointOrientation(0);
+        //     // Add base joint to joint vector
+        //     Joints.push_back(Joint(0, baseJointType, baseJointOrientation, vector<int>{0,0,0}));
+        //     cout << "\nBase Joint set as Joint " << Joints.at(0).getIndex() << ", and is " << boolToStr_JointType(Joints.at(0).getisRevolute()) << " with default Z Orientation " << stringFromIntVector(Joints.at(0).getZaxis()) << " and Position " << stringFromIntVector(Joints.at(0).getZaxis()) << ".\n";
+        //     break;
+        // };
 
         // Input remaining joint parameters
-        for (int i = 1; i < numJoints; i++) {
+        for (int i = 0; i < numJoints; i++) {
             // Input joint parameters
             cout << "\nInputting Parameters for Joint " << i << ": ";
             Joints.push_back(BuildJoint(i));

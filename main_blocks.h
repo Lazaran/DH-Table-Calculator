@@ -17,17 +17,18 @@ using namespace std;
 // Prototype Declarations
 // ========================
 
-// Determine X axis based on Z axis using right-hand rule
-int RightHandRule(vector<int> zAxis);
-
 // Prints Joints Configuration
 void JointConfigurationReview(vector<Joint>& Joints);
+
+// Allows User to change any part of any Joint
+void ChangeJointConfiguration(vector<Joint>& Joints);
+
+// Internal X axis calculation for each joint based on Z axis orientations
+void CalculateXOrientations(vector<Joint>& Joints);
 
 // Calculates DH Table from Joint Configuration
 void CalculateDH_Table(vector<Joint> Joints);
 
-// Allows User to change any part of any Joint
-void ChangeJointConfiguration(vector<Joint>& Joints);
 
 // ========================
 // Function Definitions

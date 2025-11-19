@@ -243,7 +243,7 @@ int findDH_Parameter_a(Joint current_joint, Joint previous_joint){
         return 0;
     }
     else {
-        return currentOffset - previousOffset;
+        return abs(currentOffset - previousOffset);
     };
     // thats a?
 };
@@ -253,12 +253,11 @@ int findDH_Parameter_alpha(Joint current_joint, Joint previous_joint){
     // Check for rotation about Z axis orientation
     if (previous_joint.getZaxis() != current_joint.getZaxis()){
         // Measure angle between current and previous X axes, about the previous Z axis
-        findRotationAboutAxis(current_joint.getXaxis(), previous_joint.getZaxis(), current_joint.getZaxis());
+        return findRotationAboutAxis(current_joint.getXaxis(), previous_joint.getZaxis(), current_joint.getZaxis());
     }
     else {
         return 0;
     };
-    return 0;
 };
 
 // Find the DH parameter 'd' between two joints
@@ -272,7 +271,7 @@ int findDH_Parameter_d(Joint current_joint, Joint previous_joint){
         return 0;
     }
     else {
-        return currentOffset - previousOffset;
+        return abs(currentOffset - previousOffset);
     };
     // thats d?
 };
@@ -282,12 +281,11 @@ int findDH_Parameter_theta(Joint current_joint, Joint previous_joint){
     // Check for rotation about Z axis orientation
     if ( previous_joint.getXaxis() != current_joint.getXaxis()){
         // Measure angle between current and previous X axes, about the previous Z axis
-        findRotationAboutAxis(previous_joint.getZaxis(), previous_joint.getXaxis(), current_joint.getXaxis());
+        return findRotationAboutAxis(previous_joint.getZaxis(), previous_joint.getXaxis(), current_joint.getXaxis());
     }
     else {
         return 0;
     }
-    return 0;
 };
 
 #endif // LINALG_LIB_H
