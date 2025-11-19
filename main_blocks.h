@@ -40,7 +40,7 @@ void JointConfigurationReview(vector<Joint>& Joints){
     cout << "\n===========================\n";
     // Loop through joints and print their parameters
     for (int i = 0; i < Joints.size(); i++) {
-        cout << "\n| Joint " << i << ":\n";
+        cout << "\n===== Joint " << i << " =====\n";
         cout << "|  Joint Index: " << Joints.at(i).getIndex() << endl;
         cout << "|  Joint Type: " << boolToStr_JointType(Joints.at(i).getisRevolute()) << endl;
         cout << "|  Joint Z Orientation: " << stringFromIntVector(Joints.at(i).getZaxis()) << endl;
@@ -56,7 +56,8 @@ void JointConfigurationReview(vector<Joint>& Joints){
 void ChangeJointConfiguration(vector<Joint>& Joints){
     while (true){
         // Select Joint to modify
-        cout << "\nThere are " << Joints.size() << " joints. Which Joint would you like to modify? \n";
+        cout << "\nThere are " << Joints.size() << " joints. Which Joint would you like to modify?";
+        cout << "\nSelecting: ";
         int jointIndex = getInputInt();
         if (jointIndex < 0 || jointIndex >= Joints.size()) {
             cout << "\nInvalid Joint Index.";
@@ -64,10 +65,11 @@ void ChangeJointConfiguration(vector<Joint>& Joints){
         }
         while (true) {
             // Select parameter to modify
-            cout << "\nYou have selected Joint " << jointIndex << ". What parameter would you like to modify? \n";
-            cout << "  1: Joint Type\n";
-            cout << "  2: Joint Z Orientation\n";
-            cout << "  3: Joint Position\n";
+            cout << "\nYou have selected Joint " << jointIndex << ". What parameter would you like to modify?";
+            cout << "\n  1: Joint Type";
+            cout << "\n  2: Joint Z Orientation";
+            cout << "\n  3: Joint Position";
+            cout << "\n Selecting: ";
             int paramChoice = getInputInt();
             // Modify selected parameter
             switch (paramChoice) {
@@ -133,13 +135,10 @@ void CalculateXOrientations(vector<Joint>& Joints) {
 // theta(i): angle about z(i-1) from x(i-1) to x(i) (for revolute joints, this is variable)
 void CalculateDH_Table(vector<Joint> Joints){
     cout << "\nCalculating DH Table:\n";
-    cout << "\n===========================\n";
-    cout << "\nDH Parameters:\n";
+    cout << "\n===========================";
+    cout << "\n      DH Parameters:";
     cout << "\n===========================\n";
     for (int i = 1; i < Joints.size(); i++){
-        // Initialize placeholder variables
-        string dLength_str = string("D_" + i);
-        string theta_i_str = string("Theta_" + i);
         // for joint i, check a
         // take the x axis orientation of joint i, paired with the origin position of both joint i and joint i-1 and check the distance along that axis
         int aLength = findDH_Parameter_a(Joints.at(i), Joints.at(i-1));
@@ -154,14 +153,14 @@ void CalculateDH_Table(vector<Joint> Joints){
         int theta = findDH_Parameter_theta(Joints.at(i), Joints.at(i-1));
         // send dh values to matrix (not happening lol)
         if (Joints.at(i).getisRevolute()){
-            cout << " | Joint " << i << ": a = " << aLength << ", alpha = " << alpha << ", d = " << dLength << ", theta = " << theta_i_str << "\n";
+            cout << " | Link " << i << ": a = " << aLength << ", alpha = " << alpha << ", d = " << dLength << ", theta = " << string("Theta_" + to_string(i)) << "\n";
         }
         else {
-            cout << " | Joint " << i << ": a = " << aLength << ", alpha = " << alpha << ", d = " << dLength_str << ", theta = " << theta << "\n";
+            cout << " | Link " << i << ": a = " << aLength << ", alpha = " << alpha << ", d = " << string("D_" + to_string(i)) << ", theta = " << theta << "\n";
         };
     };
-    cout << "\n===========================\n";
-    cout << "\n      End of DH Table      \n";
+    cout << "\n===========================";
+    cout << "\n      End of DH Table      ";
     cout << "\n===========================\n";
 };
 

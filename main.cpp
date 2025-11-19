@@ -61,6 +61,7 @@ int main() {
         // Input number of joints
         while (true) {
             // Get the number of joints in the arm
+            cout << "\nPlease consider your end-effector frame as the final joint in the arm.";
             cout << "\nHow many joints are in your robotic arm: ";
             numJoints = getInputInt();
             // Validate input

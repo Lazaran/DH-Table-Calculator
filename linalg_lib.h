@@ -148,7 +148,6 @@ int getVectorMagnitude(vector<int> vec){
 // Find rotation about an axis between two other axes
 // Praying this works for theta AND alpha (was built in theta then pulled into separate function)
 int findRotationAboutAxis(vector<int> rotation_axis, vector<int> start_axis, vector<int> final_axis){
-    // Flips the final rotation direction based on previous X starting axis
     int start_flip = 0;
     int rotation_angle = 0;
     switch (mapOrientationToAxis(rotation_axis)) {
