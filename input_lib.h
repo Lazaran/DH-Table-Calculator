@@ -68,19 +68,26 @@ bool boolRPQuerySelection(const string& qText, const string& cText, const string
 int getInputInt(){
     int num;
     string line;
+    // Get line input
     getline(cin, line);
+    // Use stringstream for conversion
     stringstream ss(line);
+    // Extract integer
     ss >> num;
+    // Return the extracted integer
     return num;
 };
 
 // Get string input from user
 string getInputStr(){
     string line;
+    // Get line input
     getline(cin, line);
+    // Return the input string
     return line;
 };
 
+// Unused function because of boolRPQuerySelection
 // Convert string input to boolean for joint type
 bool strToBool_JointType(const string& str){
     if (str == "R" || str == "r") {
@@ -91,13 +98,14 @@ bool strToBool_JointType(const string& str){
 
 // Check joint type and return string for display
 string boolToStr_JointType(bool jointType){
+    // Return Revolute if true, Prismatic if false
     if (jointType) {
         return "Revolute";
     } 
     else {
         return "Prismatic";
     };
-;}
+};
 
 // Check if the vector string input is valid
 bool checkForVectorInString(const string& str){
@@ -105,13 +113,14 @@ bool checkForVectorInString(const string& str){
     if (str.find('(') != string::npos && str.find(')') != string::npos) {
         return true;
     }
+    // Invalid format
     else {
         cout << "\nInvalid vector format. Please use parentheses (e.g., (1,2,3)).";
         return false;
     }
 };
 
-// Check if the vector string input is valid for int or float vector and remove spaces and outside parentheses
+// Remove spaces and outside parentheses from vector string input and return cleaned string
 string cleanVectorFromString(const string& str){
     string cleanedStr = str;
     // Remove spaces using std::remove to avoid ambiguity with C remove()
@@ -120,6 +129,7 @@ string cleanVectorFromString(const string& str){
     if (!cleanedStr.empty() && cleanedStr.front() == '(' && cleanedStr.back() == ')') {
         cleanedStr = cleanedStr.substr(1, cleanedStr.size() - 2);
     }
+    // Return cleaned string
     return cleanedStr;
 };
 
@@ -129,20 +139,26 @@ bool CheckStringyIntVector(const string& str){
     string cleanedStr = str;
     stringstream ss(cleanedStr);
     string item;
-    // First pass, grabbing X element
+    // First pass, checking X element
+    // Grab X element
     getline(ss, item, ',');
+    // Check if X element is a valid integer
     if (!((all_of(item.begin(), item.end(), ::isdigit)) || (item.front() == '-' && all_of(item.begin() + 1, item.end(), ::isdigit)))) {
         cout << "\nUse integers for vector input in the X position.";
         return result;
     }
-    // Second pass, grabbing Y element
+    // Second pass, checking Y element
+    // Grab Y element
     getline(ss, item, ',');
+    // Check if Y element is a valid integer
     if (!((all_of(item.begin(), item.end(), ::isdigit)) || (item.front() == '-' && all_of(item.begin() + 1, item.end(), ::isdigit)))) {
         cout << "\nUse integers for vector input in the Y position.";
         return result;
     }
-    // Third pass, grabbing Z element
+    // Third pass, checking Z element
+    // Grab Z element
     getline(ss, item);
+    // Check if Z element is a valid integer
     if (!((all_of(item.begin(), item.end(), ::isdigit)) || (item.front() == '-' && all_of(item.begin() + 1, item.end(), ::isdigit)))) {
         cout << "\nUse integers for vector input in the Z position.";
         return result;
@@ -205,13 +221,17 @@ vector<int> BuildIntVectorFromCleanString(const string& str){
     string item;
     // First pass, grabbing X element
     getline(ss, item, ',');
+    // Add X element to result vector
     result.push_back(stoi(item));
     // Second pass, grabbing Y element
     getline(ss, item, ',');
+    // Add Y element to result vector
     result.push_back(stoi(item));
     // Third pass, grabbing Z element
     getline(ss, item);
+    // Add Z element to result vector
     result.push_back(stoi(item));
+    // Return result vector
     return result;
 };
 
@@ -238,17 +258,23 @@ vector<float> BuildFloatVectorFromCleanString(const string& str){
 // Convert vector<int> to string for display
 string stringFromIntVector(const vector<int>& vec){
     string result = "(";
+    // Loop through vector elements
     for (int i = 0; i < 3; i++) {
+        // Append element to result string
         result += to_string(vec[i]);
+        // Add comma if not the last element
         if (i < 2) {
             result += ",";
         }
     }
+    // Append closing parenthesis
     result += ")";
+    // Return result string
     return result;
 };
 
 // Convert vector<float> to string for display
+// Technically deprecated since all vectors are integer-based now, but kept for potential future use
 string stringFromFloatVector(const vector<float>& vec){
     string result = "(";
     for (int i = 0; i < 3; ++i) {
@@ -265,20 +291,29 @@ string stringFromFloatVector(const vector<float>& vec){
 bool boolYNQuerySelection(const string& qText, const string& cText, const string& dText, const string& eText, bool defaultValue){
     bool result = defaultValue;
     string responseCode;
+    // Input loop
     while (true) {
+        // Prompt user with query text
         cout << qText;
+        // Get user input
         responseCode = getInputStr();
+        // Check for Y/y input
         if ((responseCode == "Y" || responseCode == "y")) {
+            // Display confirmation text and break loop
             cout << cText;
             break;
         };
+        // Check for N/n input
         if ((responseCode == "N" || responseCode == "n")) {
+            // Set result to opposite of default value, display denial text, and break loop
             result = !defaultValue;
             cout << dText;
             break;
         };
+        // Handle invalid input by displaying error text
         cout << eText;
     };
+    // Return boolean result
     return result;
 };
 
@@ -286,20 +321,29 @@ bool boolYNQuerySelection(const string& qText, const string& cText, const string
 bool boolRPQuerySelection(const string& qText, const string& cText, const string& dText, const string& eText, bool defaultValue){
     bool result = defaultValue;
     string responseCode;
+    // Input loop
     while (true) {
+        // Prompt user with query text
         cout << qText;
+        // Get user input
         responseCode = getInputStr();
+        // Check for R/r input
         if ((responseCode == "R" || responseCode == "r")) {
+            // Display confirmation text and break loop
             cout << cText;
             break;
         };
+        // Check for P/p input
         if ((responseCode == "P" || responseCode == "p")) {
+            // Set result to opposite of default value, display denial text, and break loop
             result = !defaultValue;
             cout << dText;
             break;
         };
+        // Handle invalid input by displaying error text
         cout << eText;
     };
+    // Return boolean result
     return result;
 };
 

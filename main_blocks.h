@@ -34,12 +34,12 @@ void CalculateDH_Table(vector<Joint> Joints);
 // Function Definitions
 // ========================
 
-// Prints Joints Configuration
+// Displays Joint Parameters Configuration
 void JointConfigurationReview(vector<Joint>& Joints){
     cout << "\n===========================";
     cout << "\nJoint Configuration Review:";
     cout << "\n===========================\n";
-    // Loop through joints and print their parameters
+    // Loop through Joints and print all parameters of each
     for (int i = 0; i < Joints.size(); i++) {
         cout << "\n===== Joint " << i << " =====\n";
         cout << "|  Joint Index: " << Joints.at(i).getIndex() << endl;
@@ -53,17 +53,19 @@ void JointConfigurationReview(vector<Joint>& Joints){
     cout << "\n===========================\n";
 };
 
-// Allows User to change any part of any Joint
+// Allow user to change any part of any Joint
 void ChangeJointConfiguration(vector<Joint>& Joints){
     while (true){
         // Select Joint to modify
         cout << "\nThere are " << Joints.size() << " joints. Which Joint would you like to modify?";
         cout << "\nSelecting: ";
         int jointIndex = getInputInt();
+        // Check if input is valid Joint index
         if (jointIndex < 0 || jointIndex >= Joints.size()) {
             cout << "\nInvalid Joint Index.";
             continue;
-        }
+        };
+        // Modify selected Joint
         while (true) {
             // Select parameter to modify
             cout << "\nYou have selected Joint " << jointIndex << ". What parameter would you like to modify?";
@@ -91,13 +93,19 @@ void ChangeJointConfiguration(vector<Joint>& Joints){
                     break;
             };
             // Ask if user wants to modify another parameter of the same joint
-            bool modifyAnotherParam = boolYNQuerySelection(string("\nWould you like to modify another parameter for Joint " + to_string(jointIndex) + "? (Y/N): "), "\nModifying another parameter.", "\nReturning to Joint selection.", "\nInvalid input.", true);
+            bool modifyAnotherParam = boolYNQuerySelection(string("\nWould you like to modify another parameter for Joint " + to_string(jointIndex) + "? (Y/N): "), 
+                                                                "\nModifying another parameter.", 
+                                                                "\nReturning to Joint selection.", 
+                                                                "\nInvalid input.", true);
             if (!modifyAnotherParam) {
                 break;
             };
         };
         // Ask if user wants to modify another joint
-        bool modifyAnotherJoint = boolYNQuerySelection("\nWould you like to modify another Joint? (Y/N): ", "\nModifying another Joint.", "\nExiting Joint modification.", "\nInvalid input.", true);
+        bool modifyAnotherJoint = boolYNQuerySelection("\nWould you like to modify another Joint? (Y/N): ", 
+                                                        "\nModifying another Joint.", 
+                                                        "\nExiting Joint modification.", 
+                                                        "\nInvalid input.", true);
         if (!modifyAnotherJoint) {
             break;
         };

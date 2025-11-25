@@ -57,39 +57,45 @@ int findDH_Parameter_theta(Joint current_joint, Joint previous_joint);
 
 // Map axis integer to orientation vector
 vector<int> mapAxisToOrientation(int axis){
-    vector<int> tempAxis = {0,0,1};
-    // Map input axis to orientation vector
-    switch (axis) {
-    // Oriented about Positive X Axis
-    case 1:
-        tempAxis = {1,0,0};
-        break;
-    // Oriented about Positive Y Axis
-    case 2:
-        tempAxis = {0,1,0};
-        break;
-    // Oriented about Positive Z Axis
-    case 3:
-        tempAxis = {0,0,1};
-        break;
-    // Oriented about Negative X Axis
-    case 4:
-        tempAxis = {-1,0,0};
-        break;
-    // Oriented about Negative Y Axis
-    case 5:
-        tempAxis = {0,-1,0};
-        break;
-    // Oriented about Negative Z Axis
-    case 6:
-        tempAxis = {0,0,-1};
-        break;
-    // Invalid Input
-    default:
-        cout << "\nInvalid axis, use 1/4 for X, 2/5 for Y, 3/6 for Z.";
-        cout << "\nNo changes made to orientation.";
-        break;
+    vector<int> tempAxis = {0,0,0};
+    while (true){
+        // Map input axis to orientation vector
+        switch (axis) {
+            // Oriented about Positive X Axis
+            case 1:
+                tempAxis = {1,0,0};
+                break;
+            // Oriented about Positive Y Axis
+            case 2:
+                tempAxis = {0,1,0};
+                break;
+            // Oriented about Positive Z Axis
+            case 3:
+                tempAxis = {0,0,1};
+                break;
+            // Oriented about Negative X Axis
+            case 4:
+                tempAxis = {-1,0,0};
+                break;
+            // Oriented about Negative Y Axis
+            case 5:
+                tempAxis = {0,-1,0};
+                break;
+            // Oriented about Negative Z Axis
+            case 6:
+                tempAxis = {0,0,-1};
+                break;
+            // Invalid Input
+            default:
+                cout << "\nInvalid axis, use 1 or 4 for X, 2 or 5 for Y, 3 or 6 for Z.";
+            break;
+        };
+        // Break loop if valid axis was mapped
+        if (tempAxis != vector<int>{0,0,0}){
+            break;
+        };
     };
+    // Return mapped orientation vector
     return tempAxis;
 };
 
@@ -121,35 +127,43 @@ int RightHandRule(vector<int> zAxis){
     else if (zAxis == vector<int>{0,1,0} || zAxis == vector<int>{0,-1,0}) {
         xAxis = 3;
     }
+    // Return mapped X axis
     return xAxis;
 };
 
 // Find orthogonal axis from two integer vectors
 vector<int> FindOrthogonalAxis(vector<int> axis1, vector<int> axis2){
+    // Default at 0
     vector<int> orthogonalAxis = {0, 0, 0};
     // Cross product
     orthogonalAxis[0] = (axis1[1] * axis2[2]) - (axis1[2] * axis2[1]);
     orthogonalAxis[1] = (axis1[2] * axis2[0]) - (axis1[0] * axis2[2]);
     orthogonalAxis[2] = (axis1[0] * axis2[1]) - (axis1[1] * axis2[0]);
+    // Return orthogonal axis
     return orthogonalAxis;
 };
 
 // Find the dot product of two integer vectors
 int findDotProduct(vector<int> vec1, vector<int> vec2){
+    // Calculate dot product
     int dotProduct = vec1[0]*vec2[0] + vec1[1]*vec2[1] + vec1[2]*vec2[2];
+    // Return dot product
     return dotProduct;
 };
 
 // Gets the magnitude of an integer vector
 int getVectorMagnitude(vector<int> vec){
+    // Sum values and return magnitude
     return (vec[0]+vec[1]+vec[2]);
 };
 
 // Find rotation about an axis between two other axes
-// Praying this works for theta AND alpha (was built in theta then pulled into separate function)
 int findRotationAboutAxis(vector<int> rotation_axis, vector<int> start_axis, vector<int> final_axis){
+    // Flip the final rotation direction based on previous X starting axis
     int start_flip = 0;
+    // Set rotation angle based on axis sign change and start_flip
     int rotation_angle = 0;
+    // Built for finding theta, thus comments are in that context, but works for alpha too
     switch (mapOrientationToAxis(rotation_axis)) {
         // World X axis (1,0,0) = Previous Z 
         case 1:
@@ -217,18 +231,24 @@ int findRotationAboutAxis(vector<int> rotation_axis, vector<int> start_axis, vec
                 start_flip = 1;
             };
             break;
+        // Catastrophic error, this will break the program
         default:
             throw runtime_error("Finding angle failed, hold on to ur panties!");
             break;
-        // Check for sign flip between current and previous axes
-        // Assuming sign flip is positive until specified otherwise, which start_flip sets based on which world axes the rotation is happening around and which axis the rotation starts at
-    };
+        };
+    /*  Assuming sign flip is positive until specified otherwise
+        which start_flip sets based on which world axes the rotation
+        is happening around and which axis the rotation starts at   */
+    // Check for sign flip between current and previous axes
     if ((getVectorMagnitude(start_axis) + getVectorMagnitude(final_axis)) == 0){
+        // Sign flip detected
         rotation_angle = (start_flip*90);
     } 
     else { 
+        // No sign flip detected
         rotation_angle = (start_flip*(-90));
     };
+    // Return the calculated rotation angle
     return rotation_angle;
 };
 
@@ -240,12 +260,13 @@ int findDH_Parameter_a(Joint current_joint, Joint previous_joint){
     int previousOffset = findDotProduct(current_joint.getXaxis(), previous_joint.getOriginPos());
     // calculate distance between the two positions along the x axis
     if (currentOffset == previousOffset){
+        // No distance between the two positions along the x axis
         return 0;
     }
     else {
+        // Calculate the absolute difference between the two positions along the x axis
         return abs(currentOffset - previousOffset);
     };
-    // thats a?
 };
 
 // Find the DH parameter 'alpha' between two joints
@@ -273,7 +294,6 @@ int findDH_Parameter_d(Joint current_joint, Joint previous_joint){
     else {
         return abs(currentOffset - previousOffset);
     };
-    // thats d?
 };
 
 // Find the DH parameter 'theta' between two joints
@@ -284,6 +304,7 @@ int findDH_Parameter_theta(Joint current_joint, Joint previous_joint){
         return findRotationAboutAxis(previous_joint.getZaxis(), previous_joint.getXaxis(), current_joint.getXaxis());
     }
     else {
+        // No rotation between X axes
         return 0;
     }
 };

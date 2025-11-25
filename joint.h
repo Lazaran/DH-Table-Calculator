@@ -33,7 +33,7 @@ public:
         ZaxisOrientation = Zaxis;
         originPosition = origin;
         XaxisOrientation = {0,0,0}; // Default X axis, to be set later
-    }
+    };
 
     // Joint Class Getters
 

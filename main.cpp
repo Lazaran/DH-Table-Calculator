@@ -1,7 +1,7 @@
 // main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // This program takes robotic arm joint info and produces a DH table
 // and the Forward Kinematic Equations for a given arm configuration.
-// Written by: Senoga Kaweesa, Sergey Mizerin, Qwyntyn Scurr, n
+// Written by: Senoga Kaweesa, Sergey Mizerin, Qwyntyn Scurr
 
 // include standard libraries
 #include <iostream>
@@ -38,14 +38,19 @@ int main() {
         cout << "\nThis program takes robotic arm joint info and produces a DH table";
         cout << "\nand the Forward Kinematic Equations for a given arm configuration.";
         
-        // Read Y/N input
+        // User Ready Query Loop
         while (true) {
-            // Check if user wants to start the program
             string queryText = "\nIf you are ready to begin, press Y to continue, otherwise press N to exit: ";
-            mainLoop = boolYNQuerySelection(queryText, "\nGlad to have you onboard!\n", "\nLeaving so soon?", "\nInvalid input.", true);
+            // Check if the user wants to run the program
+            mainLoop = boolYNQuerySelection(queryText,  "\nGlad to have you onboard!\n",
+                                                        "\nLeaving so soon?",
+                                                        "\nInvalid input.", true);
             // Double check if user wants to exit
             if (!(mainLoop)) {
-                mainLoopConfirm = boolYNQuerySelection("\nAre you sure you want to quit?: ", "\nGoodbye!", "\nGlad you're sticking around!", "\nInvalid input.", true);
+                mainLoopConfirm = boolYNQuerySelection( "\nAre you sure you want to quit?: ",
+                                                        "\nGoodbye!",
+                                                        "\nGlad you're sticking around!",
+                                                        "\nInvalid input.", true);
                 // Confirm exit choice
                 if (!mainLoopConfirm){
                     continue;
@@ -58,24 +63,28 @@ int main() {
             break;
         };
         
-        // Input number of joints
+        // Joint Quantity Input Loop
         while (true) {
-            // Get the number of joints in the arm
             cout << "\nPlease consider your end-effector frame as the final joint in the arm.";
             cout << "\nHow many joints are in your robotic arm: ";
+            // Get the number of Joints
             numJoints = getInputInt();
-            // Validate input
+            // Validate input number
             if (numJoints > 0) {
                 cout << "\nYou have specified that your arm will have " << numJoints << " joints.";
-                string confirmText = string("\nThank you, your arm has ") + to_string(numJoints) + " joints.\n";
                 // Confirm number of joints
-                bool confirmNumJoints = boolYNQuerySelection("\nIs this correct? (Y/N): ", confirmText, "\nLet's try again.", "\nInvalid input. .", true);
-                // Restart input if confirmation denied
+                string confirmText = string("\nThank you, your arm has ") + to_string(numJoints) + " joints.\n";
+                bool confirmNumJoints = boolYNQuerySelection("\nIs this correct? (Y/N): ", 
+                                                            confirmText, 
+                                                            "\nLet's try again.", 
+                                                            "\nInvalid input. .", true);
+                // Restart joint input if confirmation denied
                 if (!(confirmNumJoints)) {
                     continue;
                 };
+                // Reserve space in Joint vector for joints
                 Joints.reserve(numJoints);
-                break;  // success
+                break;
             }
             // Handle invalid input
             else {
@@ -83,34 +92,19 @@ int main() {
             };
         };
 
-        // Start inputting joint parameters
+        // Input Joint Parameters
         cout << "\nLet's begin inputting the joint parameters.";
-        // cout << "\nInputting Base Joint Parameters: \n";
-
-        // // Input base joint type
-        // while (true) {
-        //     // Get base joint type
-        //     bool baseJointType = modifyJointType(0);
-        //     // Get base joint Z orientation
-        //     vector<int> baseJointOrientation = modifyJointOrientation(0);
-        //     // Add base joint to joint vector
-        //     Joints.push_back(Joint(0, baseJointType, baseJointOrientation, vector<int>{0,0,0}));
-        //     cout << "\nBase Joint set as Joint " << Joints.at(0).getIndex() << ", and is " << boolToStr_JointType(Joints.at(0).getisRevolute()) << " with default Z Orientation " << stringFromIntVector(Joints.at(0).getZaxis()) << " and Position " << stringFromIntVector(Joints.at(0).getZaxis()) << ".\n";
-        //     break;
-        // };
-
-        // Input remaining joint parameters
+        // Loop through quantity of joints
         for (int i = 0; i < numJoints; i++) {
-            // Input joint parameters
             cout << "\nInputting Parameters for Joint " << i << ": ";
+            // Build Joint i and add to Joints vector
             Joints.push_back(BuildJoint(i));
-            // Confirm joint parameters
         };
-
+        // End of Joint Parameters Input
         cout << "\nAll Joints have been inputted successfully!\n";
     
 
-        // Menu Options
+        // Selection Menu Loop
         while (true){
             // Internal X axis calculation for each joint based on Z axis orientations 
             // Done at the top of every menu loop to ensure X axes are always up to date
@@ -123,11 +117,13 @@ int main() {
             cout << "\n  3: Change Joint Configuration.";
             cout << "\n  4: Exit Program.";
             cout << "\nSelecting: ";
+            // Get Menu Choice Input
             int menuChoice = getInputInt();
+
             // Select Option from Menu
             switch(menuChoice){
+                // Review Joint Configuration
                 case 1:
-                    // Review Joint Configuration
                     cout << "\nYou've selected to review your joint configuration.";
                     JointConfigurationReview(Joints);
                     break;
@@ -146,9 +142,11 @@ int main() {
                     // Confirm exit choice
                     mainLoopConfirm = boolYNQuerySelection("\nAre you sure you want to quit?: ", "\nGoodbye!", "\nGlad you're sticking around!", "\nInvalid input.", true);
                     break;
+                // Handle Invalid Input
                 default:
-                cout << "\nInvalid Input. Please Try again!";
+                    cout << "\nInvalid Input. Please Try again!";
             };
+            // Break program loop if user chooses to exit
             if (mainLoopConfirm){
                 break;
             };

@@ -11,6 +11,9 @@
 #include "input_lib.h"
 #include "linalg_lib.h"
 
+// ========================
+// Prototype Declarations
+// ========================
 
 // Modify joint type
 bool modifyJointType(int idxJoint);
@@ -24,23 +27,36 @@ vector<int> modifyJointPosition(int idxJoint);
 // Build Joint function prototype
 Joint BuildJoint(int idxJoint);
 
+// ========================
+// Function Definitions
+// ========================
 
-// Functions to modify joint type
+// Modify joint type
 bool modifyJointType(int idxJoint){
+    // Input loop
     while (true) {
-    // Get Joint Type Input
-        bool jointType = boolRPQuerySelection("\nIs this Joint Revolute or Prismatic? (R/P): ", "\nYou selected Revolute as the joint type.", "\nYou selected Prismatic as the joint type.", "\nInvalid input. Please enter 'R' for Revolute or 'P' for Prismatic.", true);
-    // Confirm Joint Type
-        bool confirmJointType = boolYNQuerySelection("\nIs this correct? (Y/N): ", "\nJoint type set successfully.", "\nLet's try again.", "\nInvalid input.", true);
+        // Get Joint Type Input
+        bool jointType = boolRPQuerySelection("\nIs this Joint Revolute or Prismatic? (R/P): ", 
+                                            "\nYou selected Revolute as the joint type.", 
+                                            "\nYou selected Prismatic as the joint type.", 
+                                            "\nInvalid input. Please enter 'R' for Revolute or 'P' for Prismatic.", true);
+        // Confirm Joint Type
+        bool confirmJointType = boolYNQuerySelection("\nIs this correct? (Y/N): ", 
+                                                    "\nJoint type set successfully.", 
+                                                    "\nLet's try again.", 
+                                                    "\nInvalid input.", true);
+        // Retry if not confirmed
         if (!(confirmJointType)) {
             continue;
         };
+        // Return joint type
         return jointType;
     };
-}
+};
 
 // Modify joint orientation
 vector<int> modifyJointOrientation(int idxJoint){
+    // Input loop
     while (true) {
         // Get Joint Orientation Input
         cout << "\nEnter the orientation of the Z axis of Joint " << idxJoint << ": ";
@@ -48,38 +64,51 @@ vector<int> modifyJointOrientation(int idxJoint){
         // Check input for correct type
         vector<int> axisOrientation = mapAxisToOrientation(getInputInt());
         // Confirm Joint Orientation
-        bool confirmJointOrientation = boolYNQuerySelection(string("\nIs the orientation " + stringFromIntVector(axisOrientation)) + " correct? (Y/N): ", "\nJoint orientation set successfully.", "\nLet's try again.", "\nInvalid input.", true);
+        bool confirmJointOrientation = boolYNQuerySelection(string("\nIs the orientation " + stringFromIntVector(axisOrientation)) + " correct? (Y/N): ", 
+                                                                "\nJoint orientation set successfully.", 
+                                                                "\nLet's try again.", 
+                                                                "\nInvalid input.", true);
+        // Retry if not confirmed
         if (!(confirmJointOrientation)) {
             continue;
         };
+        // Return joint orientation
         return axisOrientation;
     };
-}
+};
 
 // Modify joint position
 vector<int> modifyJointPosition(int idxJoint){
+    // Input loop
     while (true) {
-        // Get Joint Position Input and check if input is valid vector format
         string strPosition;
         cout << "\nEnter the position of Joint " << idxJoint << ": ";
+        // Get Joint Position Input and check if input is valid vector format
         strPosition = getInputStr();
+        // Retry if format is invalid
         if (!checkForVectorInString(strPosition)){
             continue;
         }
         // Process input string to vector<int> and check if elements are valid
         strPosition = cleanVectorFromString(strPosition);
+        // Retry if elements are invalid
         if (!CheckStringyIntVector(strPosition)){
             continue;
         }
         // Confirm Joint Position
-        bool confirmJointPosition = boolYNQuerySelection(string("\nIs the position (" + strPosition) + ") correct? (Y/N): ", "\nJoint position set successfully.", "\nLet's try again.", "\nInvalid input.", true);
+        bool confirmJointPosition = boolYNQuerySelection(string("\nIs the position (" + strPosition) + ") correct? (Y/N): ",
+                                                                "\nJoint position set successfully.", 
+                                                                "\nLet's try again.", 
+                                                                "\nInvalid input.", true);
+        // Retry if not confirmed
         if (!(confirmJointPosition)) {
             continue;
         };
+        // Return joint position as vector<int>
         vector<int>jointPosition = BuildIntVectorFromCleanString(strPosition);
         return jointPosition;
     };
-}
+};
 
 
 // Build Joint Vector by inputting joint parameters
@@ -88,7 +117,7 @@ Joint BuildJoint(int idxJoint){
     bool jointType = true;
     vector<int> jointOrientation = {0,0,0};
     vector<int> jointPosition = {0,0,0};
-// Input Loop
+    // Input Loop
     while (true) {
         // Collect Joint Type
         jointType = modifyJointType(idxJoint);
@@ -99,9 +128,13 @@ Joint BuildJoint(int idxJoint){
         // Collect Joint Position
         jointPosition = modifyJointPosition(idxJoint);
 
-    // Confirm Joint Parameters
+        // Confirm Joint Parameters
         cout << "\nJoint " << idxJoint << " is " << boolToStr_JointType(jointType) << " with Z orientation " << stringFromIntVector(jointOrientation) << " and Position " << stringFromIntVector(jointPosition) << ".";
-        bool confirmJoint = boolYNQuerySelection("\nIs this correct? (Y/N): ", "\nJoint parameters set successfully.", "Let's try again.", "\nInvalid input.", true);
+        bool confirmJoint = boolYNQuerySelection("\nIs this correct? (Y/N): ", 
+                                                "\nJoint parameters set successfully.", 
+                                                "\nLet's try again.", 
+                                                "\nInvalid input.", true);
+        // Retry if not confirmed
         if (!(confirmJoint)) {
             continue;
         };
